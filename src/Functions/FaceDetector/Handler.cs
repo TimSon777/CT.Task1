@@ -2,10 +2,10 @@
 
 namespace FaceDetector;
 
-public sealed class Handler : YcFunction<int, int>
+public sealed class Handler : YcFunction<byte[], int>
 {
-    public int FunctionHandler(int request, Context context)
+    public int FunctionHandler(byte[] request, Context context)
     {
-        return request + 1;
+        return 1;
     }
 }
