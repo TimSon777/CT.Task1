@@ -8,7 +8,7 @@ data "archive_file" "zip" {
 resource "yandex_function" "face_detector_func" {
   name               = "${local.prefix}-face-detection"
   description        = "Функция, по картинке определяющая лица"
-  user_hash          = "1"
+  user_hash          = "3"
   runtime            = "dotnet8"
   entrypoint         = "FaceDetector.Handler"
   memory             = "128"
