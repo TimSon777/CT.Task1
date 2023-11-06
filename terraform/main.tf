@@ -10,7 +10,7 @@ terraform {
 locals {
   zone                     = "ru-central1-a"
   service_account_key_file = "key.json"
-  prefix                   = "vvot14"
+  prefix                   = "vvot${var.account_number}"
 }
 
 provider "yandex" {
