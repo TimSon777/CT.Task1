@@ -1,16 +1,16 @@
-resource "yandex_iam_service_account" "sa_storage" {
+resource "yandex_iam_service_account" "sa_default" {
   folder_id   = var.folder_id
-  name        = "sa-aws-compatible"
-  description = "Сервисный аккаунт для управления `storage`"
+  name        = "sa-default"
+  description = "Сервисный аккаунт для управления различными сервисами"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "sa_storage_grant_storage" {
+resource "yandex_resourcemanager_folder_iam_member" "sa_default_grant" {
   folder_id = var.folder_id
-  role      = "storage.editor"
-  member    = "serviceAccount:${yandex_iam_service_account.sa_storage.id}"
+  role      = "admin"
+  member    = "serviceAccount:${yandex_iam_service_account.sa_default.id}"
 }
 
-resource "yandex_iam_service_account_static_access_key" "sa_storage_keys" {
-  service_account_id = yandex_iam_service_account.sa_storage.id
-  description        = "Ключи для управления `storage`"
+resource "yandex_iam_service_account_static_access_key" "sa_default_keys" {
+  service_account_id = yandex_iam_service_account.sa_default.id
+  description        = "Ключи для управления различными сервисами"
 }
