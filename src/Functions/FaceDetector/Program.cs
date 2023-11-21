@@ -1,1 +1,3 @@
-﻿Console.WriteLine("Hello, World!");
+﻿using FaceDetector;
+
+await new Handler().FunctionHandler(null!, null!);
