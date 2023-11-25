@@ -50,6 +50,5 @@ def proccess_message(message):
 def handler(event, context):
     for message in event['messages']:
         json_body = message['details']['message']['body']
-        print(json_body)
         message = json.loads(json_body)
         proccess_message(message)
