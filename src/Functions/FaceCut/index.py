@@ -9,14 +9,12 @@ import os
 def proccess_message(message):
     session = boto3.session.Session()
     storage = session.client(service_name='s3')
-    print(message)
 
     image = storage.get_object(
         Bucket=message['source_bucket_id'],
         Key=message['source_image_id']
     )['Body']
 
-    print('image', image)
     image = Image.open(io.BytesIO(image.read()))
 
     rectangle = message['rectangle']
@@ -36,7 +34,6 @@ def proccess_message(message):
         if coordinate['y'] < top:
             top = coordinate['y']
 
-    print((left, top, right, bottom))
     face_image = image.crop((left, top, right, bottom))
 
     face_image_bytes = io.BytesIO()
