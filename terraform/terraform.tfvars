@@ -9,3 +9,5 @@ account_number = 14
 vision_api_uri = "https://vision.api.cloud.yandex.net/vision/v1/batchAnalyze"
 
 storage_api_uri = "https://storage.yandexcloud.net"
+
+queue_api_uri = "https://message-queue.api.cloud.yandex.net"

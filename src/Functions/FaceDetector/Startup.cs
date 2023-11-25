@@ -1,8 +1,11 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
+using Amazon.SQS;
 using FaceDetector.Objects;
 using FaceDetector.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FaceDetector;
@@ -17,19 +20,42 @@ public sealed class Startup
         services.AddSingleton(Configuration);
         services.AddSingleton<IIamTokenService, IamTokenService>();
         services.AddSingleton<IPhotoProcessor, PhotoProcessor>();
+        services.AddSingleton<ICoordinateConverter, CoordinateConverter>();
+        services.AddSingleton<IYandexVisionResponseTreeTraversal, YandexVisionResponseTreeTraversal>();
+        services.AddSingleton<IMessageQueueSender, MessageQueueSender>();
 
         services.Configure<YandexSettings>(Configuration.GetSection(YandexSettings.SectionName));
 
         services.AddSingleton<IAmazonS3, AmazonS3Client>(sp =>
         {
             var yandexSettings = sp.GetRequiredService<IOptions<YandexSettings>>().Value;
-            return new AmazonS3Client(yandexSettings.AccessKey,
-                yandexSettings.SecretKey,
+            return new AmazonS3Client(
                 new AmazonS3Config
                 {
                     ServiceURL = yandexSettings.StorageApiUri.ToString(),
                     ForcePathStyle = true
                 });
+        });
+
+        services.AddSingleton<IAmazonSQS, AmazonSQSClient>(sp =>
+        {
+            var yandexSettings = sp.GetRequiredService<IOptions<YandexSettings>>().Value;
+            return new AmazonSQSClient(
+                new AmazonSQSConfig
+                {
+                    ServiceURL = yandexSettings.QueueApiUri.ToString(),
+                    AuthenticationRegion = yandexSettings.Region
+                });
+        });
+
+        services.AddLogging(logging =>
+        {
+            logging.AddConfiguration(Configuration);
+
+            logging.AddLambdaLogger(new LambdaLoggerOptions
+            {
+                IncludeException = true
+            });
         });
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = validateOnBuild });
