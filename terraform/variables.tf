@@ -25,5 +25,10 @@ variable "vision_api_uri" {
 
 variable "storage_api_uri" {
   type        = string
-  description = "URI для доступа к API Storage"
+  description = "Service URI для доступа к API Storage"
+}
+
+variable "queue_api_uri" {
+  type        = string
+  description = "Service URI для доступа к API Queue"
 }
