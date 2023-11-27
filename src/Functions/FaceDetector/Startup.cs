@@ -18,7 +18,6 @@ public sealed class Startup
         Configuration = CreateConfiguration();
 
         services.AddSingleton(Configuration);
-        services.AddSingleton<IIamTokenService, IamTokenService>();
         services.AddSingleton<IPhotoProcessor, PhotoProcessor>();
         services.AddSingleton<ICoordinateConverter, CoordinateConverter>();
         services.AddSingleton<IYandexVisionResponseTreeTraversal, YandexVisionResponseTreeTraversal>();
