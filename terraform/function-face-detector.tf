@@ -8,7 +8,7 @@ data "archive_file" "zip" {
 resource "yandex_function" "face_detector_func" {
   name               = "${local.prefix}-face-detection"
   description        = "Функция, по картинке определяющая лица"
-  user_hash          = data.archive_file.zip.output_sha256
+  user_hash          = data.archive_file.zip.output_base64sha256
   runtime            = "dotnet8"
   entrypoint         = "FaceDetector.Handler"
   memory             = "128"
@@ -21,6 +21,11 @@ resource "yandex_function" "face_detector_func" {
     "Yandex__AccessKey" : yandex_iam_service_account_static_access_key.sa_default_keys.access_key,
     "Yandex__SecretKey" : yandex_iam_service_account_static_access_key.sa_default_keys.secret_key,
     "Yandex__ApiKey" : yandex_iam_service_account_api_key.default.secret_key
+    "Yandex__TaskQueueUri" : yandex_message_queue.task_queue.id,
+    "Yandex__QueueApiUri" : var.queue_api_uri,
+    "AWS_ACCESS_KEY_ID" : yandex_iam_service_account_static_access_key.sa_default_keys.access_key,
+    "AWS_SECRET_ACCESS_KEY" : yandex_iam_service_account_static_access_key.sa_default_keys.secret_key,
+    "Yandex__Region" : "ru-central1"
   }
   content {
     zip_filename = "function.zip"

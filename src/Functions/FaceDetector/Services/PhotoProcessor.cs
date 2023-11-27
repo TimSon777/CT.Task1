@@ -1,8 +1,10 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using Amazon.S3;
 using Amazon.S3.Model;
 using FaceDetector.Objects;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FaceDetector.Services;
@@ -13,8 +15,12 @@ public interface IPhotoProcessor
 }
 
 public sealed class PhotoProcessor(
+    ICoordinateConverter coordinateConverter,
+    IYandexVisionResponseTreeTraversal yandexVisionResponseTreeTraversal,
     IAmazonS3 amazonS3,
-    IOptions<YandexSettings> yandexSettingsOptions) : IPhotoProcessor
+    IMessageQueueSender messageQueueSender,
+    IOptions<YandexSettings> yandexSettingsOptions,
+    ILogger<PhotoProcessor> logger) : IPhotoProcessor
 {
     public async Task ProcessAsync(Detail detail)
     {
@@ -29,6 +35,8 @@ public sealed class PhotoProcessor(
             BucketName = detail.BucketId,
             Key = detail.ObjectId
         });
+
+        logger.LogInformation("The object was successfully retrieved from bucket");
 
         await using var responseStream = image.ResponseStream;
         using var memoryStream = new MemoryStream();
@@ -50,6 +58,39 @@ public sealed class PhotoProcessor(
         };
 
         var response = await client.PostAsJsonAsync(yandexSettings.VisionApiUri, request);
-        await response.Content.ReadFromJsonAsync<YandexVisionResponse>();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            logger.LogCritical("The request to Yandex Vision was not successful\nCode: {Code}\n{Content}",
+                response.StatusCode,
+                content);
+
+            return;
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<YandexVisionResponse>();
+
+        var faces = yandexVisionResponseTreeTraversal
+            .Traverse(result!.Results)
+            .ToArray();
+
+        logger.LogInformation("Yandex Vision returned the result, count faces: {Faces Count}", faces.Length);
+
+        var faceCutTaskQueueMessages = faces
+            .Where(f => f.BoundingBox.Vertices
+                .All(v => v.X is not null && v.Y is not null))
+            .Select(f => new TaskQueueMessage
+            {
+                SourceImageId = detail.ObjectId,
+                SourceBucketId = detail.BucketId,
+                Rectangle = f.BoundingBox.Vertices
+                    .Select(coordinateConverter.MapToIntCoordinate)
+            });
+
+        await messageQueueSender.SendBatchAsync(faceCutTaskQueueMessages);
+
+        logger.LogInformation("Data sent to queue successfully");
+        logger.LogInformation("The function completed its work successfully");
     }
 }

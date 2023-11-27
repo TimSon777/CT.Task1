@@ -12,4 +12,8 @@ storage_api_uri = "https://storage.yandexcloud.net"
 
 photo_face_database_name = "vvot00-db-photo-face"
 
+photo_face_database_user = "user"
+
 photo_face_database_password = "password"
+
+photo_face_database_faces_table_name = "faces"
