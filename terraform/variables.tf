@@ -27,3 +27,23 @@ variable "storage_api_uri" {
   type        = string
   description = "URI для доступа к API Storage"
 }
+
+variable "photo_face_database_name" {
+  type        = string
+  description = "Название базы данных"
+}
+
+variable "photo_face_database_user" {
+  type        = string
+  description = "Пользователь для базы данных"
+}
+
+variable "photo_face_database_password" {
+  type        = string
+  description = "Пароль для базы данных"
+}
+
+variable "photo_face_database_faces_table_name" {
+  type        = string
+  description = "Название таблицы с лицами"
+}

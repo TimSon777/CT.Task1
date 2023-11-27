@@ -19,7 +19,8 @@ resource "yandex_function" "face_detector_func" {
     "Yandex__VisionApiUri" : var.vision_api_uri,
     "Yandex__StorageApiUri" : var.storage_api_uri,
     "Yandex__AccessKey" : yandex_iam_service_account_static_access_key.sa_default_keys.access_key,
-    "Yandex__SecretKey" : yandex_iam_service_account_static_access_key.sa_default_keys.secret_key
+    "Yandex__SecretKey" : yandex_iam_service_account_static_access_key.sa_default_keys.secret_key,
+    "Yandex__ApiKey" : yandex_iam_service_account_api_key.default.secret_key
   }
   content {
     zip_filename = "function.zip"

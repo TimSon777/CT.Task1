@@ -13,4 +13,6 @@ public sealed class YandexSettings
     public string AccessKey { get; set; } = default!;
 
     public string SecretKey { get; set; } = default!;
+
+    public string ApiKey { get; set; } = default!;
 }

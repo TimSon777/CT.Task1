@@ -13,7 +13,6 @@ public interface IPhotoProcessor
 }
 
 public sealed class PhotoProcessor(
-    IIamTokenService iamTokenService,
     IAmazonS3 amazonS3,
     IOptions<YandexSettings> yandexSettingsOptions) : IPhotoProcessor
 {
@@ -21,10 +20,8 @@ public sealed class PhotoProcessor(
     {
         var yandexSettings = yandexSettingsOptions.Value;
 
-        var iamToken = await iamTokenService.GetTokenAsync();
-
         var client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", iamToken);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Api-Key", yandexSettings.ApiKey);
         client.DefaultRequestHeaders.Add("x-folder-id", yandexSettings.FolderId);
 
         var image = await amazonS3.GetObjectAsync(new GetObjectRequest
