@@ -47,8 +47,3 @@ variable "photo_face_database_password" {
   type        = string
   description = "Пароль для базы данных"
 }
-
-variable "photo_face_database_faces_table_name" {
-  type        = string
-  description = "Название таблицы с лицами"
-}

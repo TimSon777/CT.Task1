@@ -1,37 +1,35 @@
 resource "yandex_ydb_database_serverless" "photo_face" {
   name = var.photo_face_database_name
-  connection {
-    host     = ""
-    user     = var.photo_face_database_user
-    password = var.photo_face_database_password
+  serverless_database {
+    storage_size_limit = 2
   }
 }
 
 resource "yandex_ydb_table" "faces" {
-  path              = "${var.photo_face_database_name}/${var.photo_face_database_faces_table_name}"
+  path              = local.photo_faces_database_faces_path
   connection_string = yandex_ydb_database_serverless.photo_face.ydb_full_endpoint
-  primary_key       = []
+  primary_key       = ["name"]
 
   column {
     name = "user_defined_name"
-    type = "String"
+    type = "Utf8"
   }
 
   column {
     name     = "original_photo_id"
-    type     = "String"
+    type     = "Utf8"
     not_null = true
   }
 
   column {
     name     = "original_photo_bucket_id"
-    type     = "String"
+    type     = "Utf8"
     not_null = true
   }
 
   column {
-    name     = "id"
-    type     = "String"
+    name     = "name"
+    type     = "Utf8"
     not_null = true
   }
 }

@@ -4,7 +4,35 @@ import io
 import uuid
 import json
 import os
+import ydb
 
+def proccess_message_db(message, name, session):
+  query = f'''
+    DECLARE $name AS Utf8;
+    DECLARE $original_photo_id AS Utf8;
+    DECLARE $original_photo_bucket_id AS Utf8;
+
+    UPSERT INTO `{os.getenv('YDB_TABLE')}` (`name`, `original_photo_id`, `original_photo_bucket_id`)
+    VALUES (
+        $name,
+        $original_photo_id,
+        $original_photo_bucket_id
+    )
+    '''
+
+  params = {
+    '$name': name,
+    '$original_photo_id': message['source_image_id'],
+    '$original_photo_bucket_id': message['source_bucket_id']
+  }
+
+  query = session.prepare(query)
+  return session.transaction().execute(
+    query,
+    params,
+    commit_tx=True,
+    settings=ydb.BaseRequestSettings().with_timeout(3).with_operation_timeout(2)
+  )
 
 def proccess_message(message):
     session = boto3.session.Session()
@@ -46,6 +74,18 @@ def proccess_message(message):
         Body=face_image_bytes,
         Key=key
     )
+
+    driver = ydb.Driver(
+        endpoint=os.getenv('YDB_ENDPOINT'),
+        database=os.getenv('YDB_DATABASE'),
+        credentials=ydb.iam.MetadataUrlCredentials(),
+    )
+
+    driver.wait(fail_fast=True, timeout=5)
+
+    pool = ydb.SessionPool(driver)
+
+    pool.retry_operation_sync(lambda session: proccess_message_db(message, key, session))
 
 def handler(event, context):
     for message in event['messages']:
