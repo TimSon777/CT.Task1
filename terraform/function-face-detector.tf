@@ -18,6 +18,7 @@ resource "yandex_function" "face_detector_func" {
     "Yandex__FolderId" : var.folder_id,
     "Yandex__VisionApiUri" : var.vision_api_uri,
     "Yandex__StorageApiUri" : var.storage_api_uri,
+    "Yandex__ApiKey" : yandex_iam_service_account_api_key.default.secret_key
     "Yandex__TaskQueueUri" : yandex_message_queue.task_queue.id,
     "Yandex__QueueApiUri" : var.queue_api_uri,
     "AWS_ACCESS_KEY_ID" : yandex_iam_service_account_static_access_key.sa_default_keys.access_key,

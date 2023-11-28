@@ -14,3 +14,8 @@ resource "yandex_iam_service_account_static_access_key" "sa_default_keys" {
   service_account_id = yandex_iam_service_account.sa_default.id
   description        = "Ключи для управления различными сервисами"
 }
+
+resource "yandex_iam_service_account_api_key" "default" {
+  service_account_id = yandex_iam_service_account.sa_default.id
+  description        = "API ключ для доступа к различным сервисам"
+}

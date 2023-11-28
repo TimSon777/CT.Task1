@@ -11,3 +11,5 @@ vision_api_uri = "https://vision.api.cloud.yandex.net/vision/v1/batchAnalyze"
 storage_api_uri = "https://storage.yandexcloud.net"
 
 queue_api_uri = "https://message-queue.api.cloud.yandex.net"
+
+photo_face_database_name = "vvot14-db-photo-face"

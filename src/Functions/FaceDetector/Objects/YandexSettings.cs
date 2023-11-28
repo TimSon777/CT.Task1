@@ -14,5 +14,7 @@ public sealed class YandexSettings
 
     public string FolderId { get; set; } = default!;
 
+    public string ApiKey { get; set; } = default!;
+
     public string Region { get; set; } = default!;
 }

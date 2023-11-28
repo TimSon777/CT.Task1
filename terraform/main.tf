@@ -8,9 +8,10 @@ terraform {
 }
 
 locals {
-  zone                     = "ru-central1-a"
-  service_account_key_file = "key.json"
-  prefix                   = "vvot${var.account_number}"
+  zone                            = "ru-central1-a"
+  service_account_key_file        = "key.json"
+  prefix                          = "vvot${var.account_number}"
+  photo_faces_database_faces_path = "faces"
 }
 
 provider "yandex" {

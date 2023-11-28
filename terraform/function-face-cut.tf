@@ -18,7 +18,10 @@ resource "yandex_function" "face_cut_func" {
     "AWS_ACCESS_KEY_ID" : yandex_iam_service_account_static_access_key.sa_default_keys.access_key,
     "AWS_SECRET_ACCESS_KEY" : yandex_iam_service_account_static_access_key.sa_default_keys.secret_key,
     "AWS_ENDPOINT_URL_S3" : var.storage_api_uri,
-    "FACES_BUCKET_ID" : yandex_storage_bucket.faces.id
+    "FACES_BUCKET_ID" : yandex_storage_bucket.faces.id,
+    "YDB_ENDPOINT" : "grpcs://${yandex_ydb_database_serverless.photo_face.ydb_api_endpoint}",
+    "YDB_DATABASE" : yandex_ydb_database_serverless.photo_face.database_path,
+    "YDB_TABLE" : local.photo_faces_database_faces_path
   }
   content {
     zip_filename = "face_cut_func.zip"

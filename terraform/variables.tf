@@ -32,3 +32,8 @@ variable "queue_api_uri" {
   type        = string
   description = "Service URI для доступа к API Queue"
 }
+
+variable "photo_face_database_name" {
+  type        = string
+  description = "Название базы данных"
+}
