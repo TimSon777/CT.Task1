@@ -2,11 +2,10 @@ data "archive_file" "face_cut_func_zip" {
   output_path = "face_cut_func.zip"
   type        = "zip"
   source_dir  = "../src/Functions/FaceCut"
-  excludes    = ["bin", "obj"]
 }
 
 resource "yandex_function" "face_cut_func" {
-  name               = "${local.prefix}-face-cut"
+  name               = "${var.prefix}-face-cut"
   description        = "Функция, обрабатывающая лица"
   user_hash          = data.archive_file.face_cut_func_zip.output_base64sha256
   runtime            = "python312"
@@ -19,11 +18,11 @@ resource "yandex_function" "face_cut_func" {
     "AWS_SECRET_ACCESS_KEY" : yandex_iam_service_account_static_access_key.sa_default_keys.secret_key,
     "AWS_ENDPOINT_URL_S3" : var.storage_api_uri,
     "FACES_BUCKET_ID" : yandex_storage_bucket.faces.id,
-    "YDB_ENDPOINT" : "grpcs://${yandex_ydb_database_serverless.photo_face.ydb_api_endpoint}",
+    "YDB_ENDPOINT" : local.photo_face_db_endpoint,
     "YDB_DATABASE" : yandex_ydb_database_serverless.photo_face.database_path,
     "YDB_TABLE" : local.photo_faces_database_faces_path
   }
   content {
-    zip_filename = "face_cut_func.zip"
+    zip_filename = data.archive_file.face_cut_func_zip.output_path
   }
 }

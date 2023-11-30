@@ -1,5 +1,5 @@
 resource "yandex_function_trigger" "face_detector_func_trigger" {
-  name        = "${local.prefix}-photo"
+  name        = "${var.prefix}-photo"
   description = "Триггер FaceDetector функции"
   object_storage {
     bucket_id    = yandex_storage_bucket.photo.id
@@ -7,7 +7,7 @@ resource "yandex_function_trigger" "face_detector_func_trigger" {
     delete       = false
     update       = false
     suffix       = ".jpg"
-    batch_cutoff = ""
+    batch_cutoff = "0"
   }
   function {
     id                 = yandex_function.face_detector_func.id

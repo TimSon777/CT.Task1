@@ -1,29 +1,32 @@
 import boto3
 from PIL import Image
 import io
-import uuid
 import json
 import os
 import ydb
+import random
+import string
+
+def generate_random_string(length):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choices(characters, k=length))
+    return random_string
 
 def proccess_message_db(message, name, session):
   query = f'''
     DECLARE $name AS Utf8;
     DECLARE $original_photo_id AS Utf8;
-    DECLARE $original_photo_bucket_id AS Utf8;
 
-    UPSERT INTO `{os.getenv('YDB_TABLE')}` (`name`, `original_photo_id`, `original_photo_bucket_id`)
+    UPSERT INTO `{os.getenv('YDB_TABLE')}` (`name`, `original_photo_id`)
     VALUES (
         $name,
-        $original_photo_id,
-        $original_photo_bucket_id
+        $original_photo_id
     )
     '''
 
   params = {
     '$name': name,
-    '$original_photo_id': message['source_image_id'],
-    '$original_photo_bucket_id': message['source_bucket_id']
+    '$original_photo_id': message['source_image_id']
   }
 
   query = session.prepare(query)
@@ -67,7 +70,7 @@ def proccess_message(message):
     face_image_bytes = io.BytesIO()
     face_image.save(face_image_bytes, format='JPEG')
     face_image_bytes.seek(0)
-    key = str(uuid.uuid4()) + '.jpg'
+    key = generate_random_string(10) + '.jpg'
 
     storage.put_object(
         Bucket=os.environ['FACES_BUCKET_ID'],

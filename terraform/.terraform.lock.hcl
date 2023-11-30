@@ -8,16 +8,16 @@ provider "registry.terraform.io/hashicorp/archive" {
   ]
 }
 
-provider "registry.terraform.io/hashicorp/external" {
-  version = "2.3.1"
+provider "registry.terraform.io/hashicorp/http" {
+  version = "3.4.0"
   hashes = [
-    "h1:0/VG+zmBcGhAof8g5k9R7HYyotYs6KPqnQKnz6XBiAg=",
+    "h1:QXyGXwWgTmlhJZhlsZpkZ/Bz0YKzmwO8zmmRM09Jnzc=",
   ]
 }
 
 provider "registry.terraform.io/yandex-cloud/yandex" {
-  version = "0.101.0"
+  version = "0.103.0"
   hashes = [
-    "h1:R2hWnJogoJ6511k5P5F4Ju7ynY8ZxjG2qcYXmOjIyXM=",
+    "h1:bPqj2I0IUoO2fLbdeDA8//VbqqEI2VhaBaLRjvjQFgs=",
   ]
 }
