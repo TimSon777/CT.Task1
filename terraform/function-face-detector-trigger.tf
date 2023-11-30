@@ -7,7 +7,7 @@ resource "yandex_function_trigger" "face_detector_func_trigger" {
     delete       = false
     update       = false
     suffix       = ".jpg"
-    batch_cutoff = ""
+    batch_cutoff = "0"
   }
   function {
     id                 = yandex_function.face_detector_func.id
