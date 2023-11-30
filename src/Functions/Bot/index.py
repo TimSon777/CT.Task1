@@ -133,7 +133,7 @@ def handler(event, context):
           "reply_to_message_id": message_id
         }
       )
-  elif 'reply_to_message' in message and len(message['reply_to_message']["photo"]) > 0:
+  elif 'reply_to_message' in message and "photo" in message['reply_to_message'] and len(message['reply_to_message']["photo"]) > 0:
     file_id = message['reply_to_message']['photo'][0]['file_id']
     user_defined_name = message['text']
     pool.retry_operation_sync(lambda session: process_reply_to_command_db(file_id, user_defined_name, session))
