@@ -1,7 +1,7 @@
 resource "yandex_ydb_database_serverless" "photo_face" {
-  name = var.photo_face_database_name
+  name = "${var.prefix}-db-photo-face"
   serverless_database {
-    storage_size_limit = 2
+    storage_size_limit = 5
   }
 }
 
@@ -16,15 +16,8 @@ resource "yandex_ydb_table" "faces" {
   }
 
   column {
-    name     = "original_photo_id"
-    type     = "Utf8"
-    not_null = true
-  }
-
-  column {
-    name     = "original_photo_bucket_id"
-    type     = "Utf8"
-    not_null = true
+    name = "original_photo_id"
+    type = "Utf8"
   }
 
   column {
@@ -32,4 +25,13 @@ resource "yandex_ydb_table" "faces" {
     type     = "Utf8"
     not_null = true
   }
+
+  column {
+    name = "telegram_file_id"
+    type = "Utf8"
+  }
+}
+
+locals {
+  photo_face_db_endpoint = "grpcs://${yandex_ydb_database_serverless.photo_face.ydb_api_endpoint}"
 }

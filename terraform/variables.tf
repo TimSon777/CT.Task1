@@ -8,14 +8,9 @@ variable "folder_id" {
   description = "Идентификатор каталога"
 }
 
-variable "photo_bucket_name" {
+variable "prefix" {
   type        = string
-  description = "Названия бакета для фоток"
-}
-
-variable "account_number" {
-  type        = number
-  description = "Номер аккаунта, используемый в префиксе: например, в vvot14 это 14"
+  description = "Префикс для всех ресурсов"
 }
 
 variable "vision_api_uri" {
@@ -33,7 +28,7 @@ variable "queue_api_uri" {
   description = "Service URI для доступа к API Queue"
 }
 
-variable "photo_face_database_name" {
+variable "telegram_token" {
   type        = string
-  description = "Название базы данных"
+  description = "Токен telegram бота"
 }

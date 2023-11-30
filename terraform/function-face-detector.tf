@@ -1,14 +1,14 @@
-data "archive_file" "zip" {
-  output_path = "function.zip"
+data "archive_file" "face_detector_func_zip" {
+  output_path = "face_detector_func.zip"
   type        = "zip"
   source_dir  = "../src/Functions/FaceDetector"
   excludes    = ["bin", "obj"]
 }
 
 resource "yandex_function" "face_detector_func" {
-  name               = "${local.prefix}-face-detection"
+  name               = "${var.prefix}-face-detection"
   description        = "Функция, по картинке определяющая лица"
-  user_hash          = data.archive_file.zip.output_base64sha256
+  user_hash          = data.archive_file.face_detector_func_zip.output_base64sha256
   runtime            = "dotnet8"
   entrypoint         = "FaceDetector.Handler"
   memory             = "128"
@@ -26,6 +26,6 @@ resource "yandex_function" "face_detector_func" {
     "Yandex__Region" : "ru-central1"
   }
   content {
-    zip_filename = "function.zip"
+    zip_filename = data.archive_file.face_detector_func_zip.output_path
   }
 }
