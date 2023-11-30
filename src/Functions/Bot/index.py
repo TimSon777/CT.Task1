@@ -141,7 +141,7 @@ def handler(event, context):
       url=f'https://api.telegram.org/bot{tgkey}/sendMessage',
       params={
         "chat_id": chat_id,
-        "text": "Отличное название!" ,
+        "text": "Отличное название!",
         "reply_to_message_id": message_id
       }
     )
