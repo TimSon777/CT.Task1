@@ -16,7 +16,7 @@
     `prefix` - если в `itis-vvot` тестируете
 2. Создать сервисный аккаунт с ролью `admin`, чтобы через него применять конфигурации terraform
 3. Сгенерировать key.json. [Документация](https://cloud.yandex.ru/docs/tutorials/infrastructure-management/terraform-quickstart#get-credentials). См команду снизу. Положить в `./terraform`
-4. Из `./terraform` выполнить `terraform apply -auto-approve`
+4. Из `./terraform` выполнить `terraform init` и `terraform apply -auto-approve`
 
 yc iam key create \
   --service-account-id <идентификатор_сервисного_аккаунта> \
