@@ -317,3 +317,5 @@ terraform.rc
 key.json
 
 *.zip
+
+.terraform.lock.hcl
